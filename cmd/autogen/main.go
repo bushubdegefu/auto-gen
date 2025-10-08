@@ -61,6 +61,10 @@ var autoCommand = &cobra.Command{
 		}
 
 		// Output file
+		err = os.MkdirAll(outputPath, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
 		outputFile := filepath.Join(outputPath, "generated.robot")
 
 		// Convert []map[string]string to []map[string]any for templates
@@ -72,7 +76,7 @@ var autoCommand = &cobra.Command{
 			}
 			templData = append(templData, converted)
 		}
-
+		// fmt.Println("%+v\n", templData)
 		autogen.WriteTemplateToFileModel(outputFile, tmpl, templData)
 
 		fmt.Printf("✔️ Successfully generated test file: %s\n", outputFile)

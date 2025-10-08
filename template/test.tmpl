@@ -3,23 +3,26 @@ Library    SeleniumLibrary    run_on_failure=NOTHING
 Library    SeleniumLibrary
 Library    OperatingSystem
 Library    Collections
- 
- 
- 
+
+
+
 Resource  ../keywords/ussd_keywords.robot
- 
- 
+
+
 *** Variables ***
 ${LANGUAGE}      English
 @{VALID_LANGUAGES}  English  Afan_Oromo  Somali  Amharic  Tigrigna
- 
- 
+
+
+{{ range . }}
 *** Test Cases ***
-Test USSD Verify Tele Voice Bundle Purchase - Airtime - Daily - Buy once- TeleMin
+{{index . "ProductName"}}
       [Setup]  Run Keywords    Execute Suite Setup as User   AND    Login To Smart Bridge and Go To Page
       [Teardown]  Close Browser
       [Documentation]    Tests USSD product purchase for a specific language and test case IDs
-      [Tags]    ussd    data-driven    multilingual   daily  telemins   tc001  prepaid   standalone
+      [Tags]    {{ index . "TestCaseId" | toLowerCaseName }}  all
       Log    ENV: ${ENV}    #level=TRACE
       Should Contain    ${VALID_LANGUAGES}    ${LANGUAGE}    Invalid language: ${LANGUAGE}. Valid options: ${VALID_LANGUAGES}
-      Run Ussd Test    TC001    ${LANGUAGE}
+      Run Ussd Test    {{ index . "TestCaseId"}}    ${LANGUAGE}
+
+{{end}}
